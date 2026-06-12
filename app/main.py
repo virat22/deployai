@@ -37,10 +37,6 @@ with tab1:
     with col3:
         dim_file = st.file_uploader("DIM File (optional)", type=["yaml", "yml"], key="dim")
 
-    use_ai = st.checkbox("🤖 Use AI Enhancement (Azure OpenAI)", value=False, disabled=not AI_AVAILABLE)
-    if not AI_AVAILABLE:
-        st.caption("⚠️ Configure .env with Azure OpenAI credentials to enable AI features")
-
     if st.button("Generate Delta", type="primary"):
         if full_file and global_file:
             full_content = full_file.read().decode("utf-8")
@@ -48,17 +44,14 @@ with tab1:
             dim_content = dim_file.read().decode("utf-8") if dim_file else ""
 
             with st.spinner("Computing delta..."):
-                if use_ai and AI_AVAILABLE:
-                    result = enhance_delta_with_ai(full_content, global_content, dim_content)
-                else:
-                    result = generate_delta_file(
-                        full_yaml=full_content,
-                        global_yaml=global_content,
-                        dim_yaml=dim_content,
-                        full_name=full_file.name,
-                        global_name=global_file.name,
-                        dim_name=dim_file.name if dim_file else ""
-                    )
+                result = generate_delta_file(
+                    full_yaml=full_content,
+                    global_yaml=global_content,
+                    dim_yaml=dim_content,
+                    full_name=full_file.name,
+                    global_name=global_file.name,
+                    dim_name=dim_file.name if dim_file else ""
+                )
 
             st.success("Delta generated!")
             st.code(result, language="yaml")
