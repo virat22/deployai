@@ -11,8 +11,14 @@ from core.delta_generator import generate_delta_file
 
 # Try importing AI engine (graceful fallback if not configured)
 try:
-    from core.ai_engine import validate_delta, enhance_delta_with_ai, explain_delta
-    AI_AVAILABLE = True
+    from core.ai_engine import validate_delta, enhance_delta_with_ai, explain_delta, get_client
+    # Test if token is actually set
+    import os
+    try:
+        token = st.secrets.get("GITHUB_TOKEN", os.getenv("GITHUB_TOKEN"))
+    except Exception:
+        token = os.getenv("GITHUB_TOKEN")
+    AI_AVAILABLE = bool(token)
 except Exception:
     AI_AVAILABLE = False
 

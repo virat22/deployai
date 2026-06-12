@@ -14,15 +14,25 @@ client = None
 def get_client() -> OpenAI:
     global client
     if client is None:
+        # Try Streamlit secrets first, then env vars
+        try:
+            import streamlit as st
+            token = st.secrets.get("GITHUB_TOKEN", os.getenv("GITHUB_TOKEN"))
+        except Exception:
+            token = os.getenv("GITHUB_TOKEN")
         client = OpenAI(
             base_url="https://models.inference.ai.azure.com",
-            api_key=os.getenv("GITHUB_TOKEN")
+            api_key=token
         )
     return client
 
 
 def get_model() -> str:
-    return os.getenv("AI_MODEL", "gpt-4o")
+    try:
+        import streamlit as st
+        return st.secrets.get("AI_MODEL", os.getenv("AI_MODEL", "gpt-4o"))
+    except Exception:
+        return os.getenv("AI_MODEL", "gpt-4o")
 
 
 def validate_delta(delta_yaml: str, global_yaml: str, full_yaml: str) -> str:
