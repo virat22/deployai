@@ -2,6 +2,10 @@
 DeployAI — Streamlit Frontend
 AI-powered infrastructure delivery platform
 """
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 from core.delta_generator import generate_delta_file
 
