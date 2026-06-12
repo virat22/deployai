@@ -59,32 +59,38 @@ with tab1:
                     dim_name=dim_file.name if dim_file else ""
                 )
 
-            st.success("Delta generated!")
-            st.code(result, language="yaml")
-
-            col_a, col_b, col_c = st.columns(3)
-            with col_a:
-                st.download_button(
-                    label="📥 Download Delta",
-                    data=result,
-                    file_name="SITE_delta.yaml",
-                    mime="text/yaml"
-                )
-
-            # AI-powered validation and explanation
-            if AI_AVAILABLE:
-                with col_b:
-                    if st.button("🔍 Validate with AI"):
-                        with st.spinner("AI validating..."):
-                            validation = validate_delta(result, global_content, full_content)
-                        st.markdown(validation)
-                with col_c:
-                    if st.button("💡 Explain Delta"):
-                        with st.spinner("AI explaining..."):
-                            explanation = explain_delta(result)
-                        st.markdown(explanation)
+            st.session_state["delta_result"] = result
+            st.session_state["global_content"] = global_content
+            st.session_state["full_content"] = full_content
         else:
             st.error("Please upload at least the Full Site File and Global Base File.")
+
+    # Display results if available
+    if "delta_result" in st.session_state:
+        result = st.session_state["delta_result"]
+        st.success("Delta generated!")
+        st.code(result, language="yaml")
+
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            st.download_button(
+                label="📥 Download Delta",
+                data=result,
+                file_name="SITE_delta.yaml",
+                mime="text/yaml"
+            )
+
+        if AI_AVAILABLE:
+            with col_b:
+                if st.button("🔍 Validate with AI"):
+                    with st.spinner("AI validating..."):
+                        validation = validate_delta(result, st.session_state["global_content"], st.session_state["full_content"])
+                    st.markdown(validation)
+            with col_c:
+                if st.button("💡 Explain Delta"):
+                    with st.spinner("AI explaining..."):
+                        explanation = explain_delta(result)
+                    st.markdown(explanation)
 
 # --- Tab 2: CI Pipeline Generator ---
 with tab2:
