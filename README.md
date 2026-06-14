@@ -8,8 +8,6 @@ Modern Kubernetes deployments involve complex Helm values management across mult
 ## Solution
 DeployAI automates infrastructure delivery using AI:
 1. **YAML Delta Generator** — Upload full site config + global base → get clean site-specific delta
-2. **CI Pipeline Generator** — Input chart details → get production-ready GitLab CI pipeline
-3. **Certificate Generator** — Input DNS/namespace → get cert-manager Certificate CR
 
 ## Tech Stack
 - **AI**: Azure OpenAI (GPT-4o) via Azure AI Foundry
@@ -42,9 +40,7 @@ streamlit run app/main.py
 
 ```
 User → Streamlit UI → Core Modules → Azure OpenAI (validation/enhancement)
-                         ├── delta_generator.py (YAML diff logic)
-                         ├── pipeline_generator.py (CI/CD templates)
-                         └── cert_generator.py (Certificate CRs)
+                         └── delta_generator.py (YAML diff logic)
 ```
 
 ## Team
